@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register – TaskManager</title>
+  <meta name="description" content="Create a new TaskManager account." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="auth-wrapper">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">✦</div>
+        <span class="auth-logo-text">TaskManager</span>
+      </div>
+
+      <h1 class="auth-title">Create account</h1>
+      <p class="auth-subtitle">Start organizing your tasks today</p>
+
+      <div id="alertBox" class="alert alert-error" role="alert">
+        <span>⚠</span>
+        <span id="alertMsg">Something went wrong.</span>
+      </div>
+
+      <form id="registerForm" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="name">Full name</label>
+          <input id="name" type="text" class="form-control" placeholder="John Doe" autocomplete="name" required />
+          <span class="form-error" id="nameError"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email address</label>
+          <input id="email" type="email" class="form-control" placeholder="you@example.com" autocomplete="email" required />
+          <span class="form-error" id="emailError"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <input id="password" type="password" class="form-control" placeholder="Min. 6 characters" autocomplete="new-password" required />
+          <span class="form-error" id="passwordError"></span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirmPassword">Confirm password</label>
+          <input id="confirmPassword" type="password" class="form-control" placeholder="••••••••" autocomplete="new-password" required />
+          <span class="form-error" id="confirmPasswordError"></span>
+        </div>
+
+        <button id="submitBtn" type="submit" class="btn btn-primary btn-full btn-lg" style="margin-top:8px">
+          <span id="btnText">Create Account</span>
+          <span id="btnSpinner" class="spinner" style="display:none"></span>
+        </button>
+      </form>
+
+      <div class="divider"></div>
+      <p class="text-sm text-muted" style="text-align:center">
+        Already have an account? <a href="login.html">Sign in</a>
+      </p>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    if (tokenManager.getAccessToken()) window.location.href = 'dashboard.html';
+
+    const form       = document.getElementById('registerForm');
+    const alertBox   = document.getElementById('alertBox');
+    const alertMsg   = document.getElementById('alertMsg');
+    const submitBtn  = document.getElementById('submitBtn');
+    const btnText    = document.getElementById('btnText');
+    const btnSpinner = document.getElementById('btnSpinner');
+
+    function setLoading(on) {
+      submitBtn.disabled = on;
+      btnText.textContent = on ? 'Creating account…' : 'Create Account';
+      btnSpinner.style.display = on ? 'inline-block' : 'none';
+    }
+
+    function showError(msg) {
+      alertMsg.textContent = msg;
+      alertBox.classList.add('visible');
+    }
+
+    function clearErrors() {
+      alertBox.classList.remove('visible');
+      ['nameError','emailError','passwordError','confirmPasswordError'].forEach(id => {
+        const el = document.getElementById(id);
+        el.textContent = '';
+        el.classList.remove('visible');
+      });
+    }
+
+    function fieldError(fieldId, msg) {
+      const el = document.getElementById(fieldId);
+      el.textContent = msg;
+      el.classList.add('visible');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearErrors();
+
+      const name            = document.getElementById('name').value.trim();
+      const email           = document.getElementById('email').value.trim();
+      const password        = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      let valid = true;
+      if (!name)    { fieldError('nameError', 'Name is required'); valid = false; }
+      if (!email)   { fieldError('emailError', 'Email is required'); valid = false; }
+      if (!password || password.length < 6) { fieldError('passwordError', 'Password must be at least 6 characters'); valid = false; }
+      if (password !== confirmPassword)     { fieldError('confirmPasswordError', 'Passwords do not match'); valid = false; }
+      if (!valid) return;
+
+      setLoading(true);
+      const { data, error } = await api.post('/auth/register', { name, email, password });
+      setLoading(false);
+
+      if (error) return showError(error);
+
+      // Auto-login after registration
+      const loginResult = await api.post('/auth/login', { email, password });
+      if (loginResult.data) {
+        tokenManager.setTokens(loginResult.data.data.accessToken, loginResult.data.data.refreshToken);
+      }
+      window.location.href = 'dashboard.html';
+    });
+  </script>
+</body>
+</html>

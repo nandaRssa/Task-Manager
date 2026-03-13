@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard – TaskManager</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">✦</div>
+        <span class="sidebar-logo-text">TaskManager</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item active">
+          <span>⊞</span> Dashboard
+        </a>
+        <a href="create-task.html" class="nav-item">
+          <span>＋</span> New Task
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <button id="logoutBtn" class="btn btn-secondary btn-full" style="justify-content:flex-start;gap:10px;font-size:14px">
+          <span>⏻</span> Logout
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <div class="main-content">
+      <header class="topbar">
+        <span class="topbar-title">Dashboard</span>
+        <div class="user-chip">
+          <div class="user-avatar" id="userInitial">?</div>
+          <span class="user-name" id="userName">Loading…</span>
+        </div>
+      </header>
+
+      <main class="page-content">
+        <!-- Stats -->
+        <div class="stats-grid" id="statsGrid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(99,102,241,0.15)">📋</div>
+            <div>
+              <div class="stat-label">Total Tasks</div>
+              <div class="stat-value" id="statTotal">–</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(245,158,11,0.15)">⏳</div>
+            <div>
+              <div class="stat-label">Pending</div>
+              <div class="stat-value" id="statPending">–</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(14,165,233,0.15)">🔄</div>
+            <div>
+              <div class="stat-label">In Progress</div>
+              <div class="stat-value" id="statInProgress">–</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(34,197,94,0.15)">✅</div>
+            <div>
+              <div class="stat-label">Completed</div>
+              <div class="stat-value" id="statCompleted">–</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task Table -->
+        <div class="table-wrapper">
+          <div class="table-header">
+            <span class="table-title">All Tasks</span>
+            <div class="table-filters">
+              <select id="filterStatus" class="form-control" style="width:auto;padding:7px 32px 7px 12px;font-size:13px">
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="in_progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+              <a href="create-task.html" class="btn btn-primary btn-sm">+ New Task</a>
+            </div>
+          </div>
+
+          <div id="tableBody">
+            <div class="loading-overlay">
+              <div class="spinner" style="border-top-color:var(--primary);border-color:var(--border);"></div>
+              <span>Loading tasks…</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
