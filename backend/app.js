@@ -41,8 +41,9 @@ app.use(errorHandler);
 
 // ── Start Server ─────────────────────────────────────────────────────────────
 initializeDatabase();
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🌐 LAN access   : http://192.168.0.130:${PORT}`);
   console.log(`📋 Environment: ${process.env.NODE_ENV}`);
 });
 

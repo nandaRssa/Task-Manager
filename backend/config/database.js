@@ -56,7 +56,7 @@ function initializeDatabase() {
     );
   `);
 
-  console.log('✅ Database initialized successfully');
+  console.log('Database initialized successfully');
   return database;
 }
 
