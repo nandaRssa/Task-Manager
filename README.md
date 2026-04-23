@@ -1,155 +1,97 @@
-# TaskiFlow 📋
+# TaskiFlow
 
-Aplikasi manajemen tugas berbasis Flutter yang terhubung dengan REST API Node.js + SQLite, dilengkapi autentikasi JWT, state management Provider, dan arsitektur berlapis (Layered Architecture).
+TaskiFlow merupakan aplikasi manajemen tugas berbasis Flutter yang terintegrasi dengan REST API berbasis Node.js dan SQLite. Aplikasi ini dilengkapi dengan autentikasi JWT, state management menggunakan Provider, serta menerapkan arsitektur berlapis (Layered Architecture).
 
-> **Tugas 2 Individu — Pengembangan Aplikasi Berbasis Platform**  
-> Topik: Implementasi Teknik Pengembangan pada Platform Web & Mobile
+Tugas 2 Individu - Pengembangan Aplikasi Berbasis Platform  
+Topik: Implementasi Teknik Pengembangan pada Platform Web dan Mobile
 
----
+## Arsitektur Proyek
 
-## 🏗️ Arsitektur Proyek
-
-```
 UTS-PABP/
 ├── backend/          # REST API (Node.js + Express + SQLite)
-├── frontend/         # Web frontend (HTML/JS) — hasil UTS
+├── frontend/         # Web frontend (HTML/JS)
 └── taskiflow/        # Aplikasi mobile Flutter
-```
 
 ---
 
-## 🔧 Backend — REST API
+## Backend - REST API
 
-Stack: **Node.js**, **Express.js**, **SQLite (better-sqlite3)**, **JWT**
+Teknologi yang digunakan meliputi Node.js, Express.js, SQLite (better-sqlite3), serta JSON Web Token (JWT) untuk autentikasi.
 
-### Fitur
-- Autentikasi dengan JWT (Register, Login, Auto-refresh token via `flutter_secure_storage`)
-- CRUD Task lengkap (Create, Read, Update, Delete)
-- Middleware otorisasi — setiap endpoint task dilindungi token
-- CORS support untuk akses dari Flutter/Web
-- Health-check endpoint `/health`
+### Fitur Utama
+- Autentikasi berbasis JWT (register dan login)
+- Operasi CRUD untuk manajemen task
+- Middleware otorisasi untuk melindungi endpoint
+- Dukungan CORS untuk integrasi frontend dan mobile
+- Endpoint health-check
 
-### Endpoint Utama
+### Endpoint API
 
-| Method | Endpoint           | Deskripsi                  | Auth |
-|--------|--------------------|----------------------------|------|
-| POST   | `/auth/register`   | Daftar akun baru           | ❌   |
-| POST   | `/auth/login`      | Login, dapat JWT token     | ❌   |
-| GET    | `/tasks`           | Ambil semua task milik user | ✅  |
-| POST   | `/tasks`           | Buat task baru             | ✅   |
-| GET    | `/tasks/:id`       | Detail satu task           | ✅   |
-| PUT    | `/tasks/:id`       | Edit task                  | ✅   |
-| DELETE | `/tasks/:id`       | Hapus task                 | ✅   |
+Method | Endpoint        | Deskripsi                     | Auth  
+POST   | /auth/register  | Registrasi pengguna           | Tidak  
+POST   | /auth/login     | Login dan mendapatkan token   | Tidak  
+GET    | /tasks          | Mengambil seluruh task user   | Ya  
+POST   | /tasks          | Menambahkan task baru         | Ya  
+GET    | /tasks/:id      | Detail task                   | Ya  
+PUT    | /tasks/:id      | Memperbarui task              | Ya  
+DELETE | /tasks/:id      | Menghapus task                | Ya  
 
-### Cara Menjalankan Backend
+### Menjalankan Backend
 
-```bash
-cd backend
-npm install
-cp .env.example .env   # sesuaikan JWT_SECRET dan PORT
-npm start
-```
+cd backend  
+npm install  
+cp .env.example .env  
+npm start  
 
-Server berjalan di `http://localhost:5000` (default).
+Server berjalan pada http://localhost:5000 secara default.
 
----
 
-## 📱 TaskiFlow — Aplikasi Flutter
+## Aplikasi Mobile - TaskiFlow (Flutter)
 
-### Tech Stack
-| Dependency              | Fungsi                              |
-|-------------------------|-------------------------------------|
-| `provider ^6.1.2`       | State management reaktif            |
-| `http ^1.2.1`           | HTTP client untuk REST API          |
-| `flutter_secure_storage`| Penyimpanan JWT token yang aman     |
-| `google_fonts`          | Tipografi modern (Inter)            |
-| `shimmer`               | Loading skeleton UI                 |
-| `intl`                  | Format tanggal & waktu              |
-| `gap`                   | Spacing utility                     |
+### Teknologi yang Digunakan
 
-### Struktur Layered Architecture
+- provider - manajemen state  
+- http - komunikasi dengan REST API  
+- flutter_secure_storage - penyimpanan token secara aman  
+- google_fonts - tipografi  
+- shimmer - tampilan loading  
+- intl - format tanggal dan waktu  
+- gap - pengaturan spasi layout  
 
-```
+## Arsitektur Layered
+
 taskiflow/lib/
-├── main.dart                   # Entry point, setup MultiProvider
-├── app.dart                    # MaterialApp, ThemeData, routing
-│
-├── core/                       # Utility & konfigurasi global
-│   ├── constants/              # AppConstants (base URL, dll)
-│   ├── errors/                 # Exception classes
-│   ├── network/                # HTTP client wrapper
-│   ├── storage/                # SecureStorage wrapper
-│   └── utils/                  # Validators, helpers
-│
-├── features/
-│   ├── auth/                   # Fitur autentikasi
-│   │   ├── models/             # UserModel (fromJson/toJson)
-│   │   ├── services/           # AuthService (HTTP calls)
-│   │   ├── providers/          # AuthProvider (state management)
-│   │   └── screens/           # LoginScreen, RegisterScreen
-│   │
-│   └── tasks/                  # Fitur manajemen tugas
-│       ├── models/             # TaskModel
-│       ├── services/           # TaskService (HTTP + auth header)
-│       ├── providers/          # TaskProvider (three-state UI)
-│       └── screens/           # TaskList, Detail, Create, Edit
-│
-└── shared/
-    └── widgets/                # AppButton, AppTextField, AppSnackbar
-```
+├── main.dart  
+├── app.dart  
+├── core/  
+├── features/  
+│   ├── auth/  
+│   └── tasks/  
+└── shared/  
 
-### Fitur Aplikasi
+## Fitur Aplikasi
 
-#### Wajib ✅
-- **JWT Authentication** — Login/Register, token disimpan di `SecureStorage`, dikirim di setiap request (`Authorization: Bearer <token>`)
-- **Three-state UI** — Loading (Shimmer skeleton), Error (pesan + retry button), Data berhasil ditampilkan
-- **Provider State Management** — `AuthProvider` + `TaskProvider` reaktif
-- **Navigasi antar halaman** — Named routes dengan slide transition animasi
+### Fitur Utama
+- Autentikasi JWT dengan penyimpanan token yang aman  
+- Three-state UI (loading, error, dan data)  
+- Manajemen state menggunakan Provider  
+- Navigasi antar halaman berbasis named routes  
 
-#### Tambahan ✅
-- **CRUD Lengkap** — Tambah, edit, hapus task langsung via API
-- **Animasi** — Fade + slide pada login screen, slide transition antar halaman
-- **Filter & Search** — Filter task berdasarkan status (All/Pending/Completed)
-- **Dark Mode** — Otomatis mengikuti tema sistem
-- **Splash Screen** — Auto-login saat app dibuka, tidak ada flash ke login jika sudah punya sesi
+### Fitur Tambahan
+- Operasi CRUD lengkap untuk task  
+- Animasi transisi antar halaman  
+- Fitur filter dan pencarian task  
+- Dukungan mode gelap (dark mode)  
+- Splash screen dengan mekanisme auto-login  
 
-### Cara Menjalankan Flutter App
+## Alur Autentikasi JWT
 
-```bash
-cd taskiflow
-flutter pub get
-flutter run
-```
+User - Login - API - Token - Secure Storage - State Management - Akses Fitur  
 
-> Pastikan backend sudah berjalan dan `base_url` di `core/constants/` sudah disesuaikan dengan IP LAN atau localhost.
+Setiap permintaan ke endpoint task menyertakan token pada header Authorization.
 
----
+## Author
 
-## 🔐 Alur JWT Authentication
-
-```
-User ──► LoginScreen ──► AuthService.login() ──► POST /auth/login
-                                                       │
-                                              ◄── { token, user }
-                                                       │
-                                        SecureStorage.write(token)
-                                                       │
-                                        AuthProvider → status: authenticated
-                                                       │
-                                              Navigator → /home (TaskListScreen)
-                                                       │
-                    setiap request Task ──► header: Authorization: Bearer <token>
-```
-
----
-
-## 📸 Screenshots
-
-> Jalankan aplikasi dan lihat tampilan modern dengan dark mode support, shimmer loading, dan animasi halus.
-
----
-
-## 👤 Author
-
-**Nanda Raissa** — Pengembangan Aplikasi Berbasis Platform  
-GitHub: [@nandaRssa](https://github.com/nandaRssa)
+Nanda Raissa  
+Pengembangan Aplikasi Berbasis Platform  
+GitHub: https://github.com/nandaRssa
