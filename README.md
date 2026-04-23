@@ -1,66 +1,77 @@
 # TaskiFlow
 
-TaskiFlow merupakan aplikasi manajemen tugas berbasis Flutter yang terintegrasi dengan REST API berbasis Node.js dan SQLite. Aplikasi ini dilengkapi dengan autentikasi JWT, state management menggunakan Provider, serta menerapkan arsitektur berlapis (Layered Architecture).
+TaskiFlow merupakan aplikasi manajemen tugas berbasis Flutter yang terintegrasi dengan REST API berbasis Node.js dan SQLite. Aplikasi ini dilengkapi dengan autentikasi JSON Web Token (JWT), state management menggunakan Provider, serta menerapkan arsitektur berlapis (Layered Architecture) untuk menghasilkan kode yang modular dan mudah dikembangkan.
 
-Tugas 2 Individu - Pengembangan Aplikasi Berbasis Platform  
-Topik: Implementasi Teknik Pengembangan pada Platform Web dan Mobile
-
-## Arsitektur Proyek
-
-UTS-PABP/
-├── backend/          # REST API (Node.js + Express + SQLite)
-├── frontend/         # Web frontend (HTML/JS)
-└── taskiflow/        # Aplikasi mobile Flutter
+Tugas 2 Individu  
+Pengembangan Aplikasi Berbasis Platform  
+Topik: Implementasi Teknik Pengembangan Aplikasi Mobile Berbasis Flutter dengan Integrasi REST API
 
 ---
 
-## Backend - REST API
+# Arsitektur Proyek
 
-Teknologi yang digunakan meliputi Node.js, Express.js, SQLite (better-sqlite3), serta JSON Web Token (JWT) untuk autentikasi.
+UTS-PABP/  
+backend/ → REST API (Node.js + Express + SQLite)  
+taskiflow/ → Aplikasi mobile Flutter  
 
-### Fitur Utama
-- Autentikasi berbasis JWT (register dan login)
-- Operasi CRUD untuk manajemen task
-- Middleware otorisasi untuk melindungi endpoint
-- Dukungan CORS untuk integrasi frontend dan mobile
-- Endpoint health-check
+Aplikasi mobile berfungsi sebagai client yang berkomunikasi dengan backend melalui REST API.
 
-### Endpoint API
+---
 
-Method | Endpoint        | Deskripsi                     | Auth  
-POST   | /auth/register  | Registrasi pengguna           | Tidak  
-POST   | /auth/login     | Login dan mendapatkan token   | Tidak  
-GET    | /tasks          | Mengambil seluruh task user   | Ya  
-POST   | /tasks          | Menambahkan task baru         | Ya  
-GET    | /tasks/:id      | Detail task                   | Ya  
-PUT    | /tasks/:id      | Memperbarui task              | Ya  
-DELETE | /tasks/:id      | Menghapus task                | Ya  
+# Backend REST API
 
-### Menjalankan Backend
+Backend dikembangkan menggunakan Node.js, Express.js, dan SQLite sebagai database. Sistem menggunakan JSON Web Token (JWT) untuk autentikasi dan otorisasi pengguna.
+
+Fitur utama backend meliputi:
+
+- Autentikasi berbasis JWT (register dan login)  
+- Operasi CRUD untuk manajemen task  
+- Middleware otorisasi untuk melindungi endpoint  
+- Dukungan CORS untuk integrasi dengan aplikasi mobile  
+- Endpoint health-check untuk memastikan server berjalan  
+
+Endpoint API yang tersedia:
+
+- POST /auth/register → Registrasi pengguna (tanpa autentikasi)  
+- POST /auth/login → Login dan mendapatkan token (tanpa autentikasi)  
+- GET /tasks → Mengambil seluruh task user (butuh autentikasi)  
+- POST /tasks → Menambahkan task baru (butuh autentikasi)  
+- GET /tasks/:id → Detail task (butuh autentikasi)  
+- PUT /tasks/:id → Memperbarui task (butuh autentikasi)  
+- DELETE /tasks/:id → Menghapus task (butuh autentikasi)  
+
+Cara menjalankan backend:
 
 cd backend  
 npm install  
 cp .env.example .env  
 npm start  
 
-Server berjalan pada http://localhost:5000 secara default.
+Server akan berjalan pada http://localhost:5000
 
+---
 
-## Aplikasi Mobile - TaskiFlow (Flutter)
+# Aplikasi Mobile (Flutter)
 
-### Teknologi yang Digunakan
+Aplikasi mobile dikembangkan menggunakan Flutter sebagai framework utama. Aplikasi ini terhubung dengan backend melalui HTTP request dan menggunakan Provider untuk pengelolaan state.
 
-- provider - manajemen state  
-- http - komunikasi dengan REST API  
-- flutter_secure_storage - penyimpanan token secara aman  
-- google_fonts - tipografi  
-- shimmer - tampilan loading  
-- intl - format tanggal dan waktu  
-- gap - pengaturan spasi layout  
+Teknologi yang digunakan:
 
-## Arsitektur Layered
+- provider untuk state management  
+- http untuk komunikasi REST API  
+- flutter_secure_storage untuk penyimpanan token secara aman  
+- google_fonts untuk tipografi  
+- shimmer untuk tampilan loading  
+- intl untuk format tanggal dan waktu  
+- gap untuk pengaturan spasi layout  
 
-taskiflow/lib/
+---
+
+# Arsitektur Layered
+
+Struktur proyek Flutter menggunakan pendekatan layered architecture:
+
+taskiflow/lib/  
 ├── main.dart  
 ├── app.dart  
 ├── core/  
@@ -69,29 +80,41 @@ taskiflow/lib/
 │   └── tasks/  
 └── shared/  
 
-## Fitur Aplikasi
+Pendekatan ini memisahkan antara data, logic, dan tampilan sehingga kode lebih mudah dikembangkan dan dipelihara.
 
-### Fitur Utama
+---
+
+# Fitur Aplikasi
+
+Fitur utama:
+
 - Autentikasi JWT dengan penyimpanan token yang aman  
 - Three-state UI (loading, error, dan data)  
 - Manajemen state menggunakan Provider  
-- Navigasi antar halaman berbasis named routes  
+- Navigasi antar halaman menggunakan named routes  
 
-### Fitur Tambahan
-- Operasi CRUD lengkap untuk task  
+Fitur tambahan:
+
+- Operasi CRUD lengkap untuk task sebagai pengembangan dari requirement utama (read data)  
 - Animasi transisi antar halaman  
-- Fitur filter dan pencarian task  
-- Dukungan mode gelap (dark mode)  
+- Fitur pencarian dan filter task  
+- Mode gelap (dark mode)  
 - Splash screen dengan mekanisme auto-login  
 
-## Alur Autentikasi JWT
+---
 
-User - Login - API - Token - Secure Storage - State Management - Akses Fitur  
+# Alur Autentikasi JWT
 
-Setiap permintaan ke endpoint task menyertakan token pada header Authorization.
+User melakukan login  
+Server mengembalikan token  
+Token disimpan menggunakan secure storage  
+Token dikirim pada setiap request melalui header Authorization  
+User dapat mengakses fitur yang membutuhkan autentikasi  
 
-## Author
+---
+
+# Author
 
 Nanda Raissa  
 Pengembangan Aplikasi Berbasis Platform  
-GitHub: https://github.com/nandaRssa
+GitHub: https://github.com/nandaRssa  
